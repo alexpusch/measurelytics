@@ -1,5 +1,6 @@
-import Measurements from './measurements.js';
-import ReportUI from './report_ui.js';
+import Measurements from './measurements';
+import ReportUI from './report_ui';
+import History from './history';
 
 const measurements = new Measurements();
 
@@ -13,7 +14,11 @@ class Measurelytics {
   }
 
   static showReport() {
-    ReportUI.show(measurements.getData());
+    const data = measurements.getData();
+    History.store(data);
+
+    const history = History.get();
+    ReportUI.show(history);
   }
 }
 

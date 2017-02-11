@@ -13,5 +13,15 @@
 }
 
 .measurelytics-report__plots {
+  height: 100%;
+  overflow: scroll;
+  padding: 20px;
+  background: white;
+}
 
+.measurelytics-report-event__title {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  font-family: verdana;
+  font-weight: 100;
 }

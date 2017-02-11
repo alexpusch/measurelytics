@@ -9,38 +9,76 @@ Plotly.register([
 ]);
 
 class ReportUI {
-  static show(data) {
+  static show(history) {
+    const historyByEvent = getHistoryByEvent(history);
+
+    const plots = Object.keys(historyByEvent)
+      .map(eventName => [eventName, historyByEvent[eventName]])
+      .map(getPlotsForEventHistory);
+
     const plotsContainer = createReportContainer();
-
-    const histogram = getHistograms(data);
-    const boxPlots = getBoxPlots(data);
-
-    plotsContainer.appendChild(histogram);
-    plotsContainer.appendChild(boxPlots);
+    plots.forEach((plot) => plotsContainer.appendChild(plot));
   }
 }
 
-function getHistograms(data) {
+function getPlotsForEventHistory([eventName, evnetsHistory]) {
+  const eventsContainer = document.createElement('div');
+  eventsContainer.className = 'measurelytics-report-event';
+
+  const titleEl = document.createElement('h2');
+  titleEl.innerText = eventName;
+  titleEl.className = 'measurelytics-report-event__title';
+  eventsContainer.appendChild(titleEl);
+
+  const histogramEl = getHistograms(evnetsHistory);
+
+  eventsContainer.appendChild(histogramEl);
+
+  return eventsContainer;
+}
+
+function getHistograms(eventsHistory) {
   const plotEl = createPlotEl();
-  const colors = randomColors({ count: Object.keys(data).length });
+  const historyLength = eventsHistory.length;
 
-  const plotDefinitions = Object.keys(data).map((eventName, i) => {
-    const events = data[eventName];
-
+  const plotDefinitions = eventsHistory.map(({date, events}, index) => {
     return {
       x: events,
       type: 'histogram',
-      name: eventName,
+      name: date,
       marker: {
-        color: colors[i],
-        opacity: 0.3,
+        color: '#000',
       },
+      opacity: 0.3 + (index * (0.7 / historyLength)),
     };
-  });
+  })
 
   Plotly.newPlot(plotEl, plotDefinitions);
 
   return plotEl;
+}
+
+function getHistoryByEvent(history) {
+  // {
+  //   eventName: [{
+  //     date: ...
+  //     events: [...]
+  //   }]
+  // }
+
+  return history.reduce((result, value) => {
+    const { date, data } = value;
+
+    Object.keys(data).forEach((eventName) => {
+      const events = data[eventName];
+      const eventsEntires = result[eventName] || [];
+
+      eventsEntires.push({ date, events });
+      result[eventName] = eventsEntires;
+    });
+
+    return result;
+  }, {});
 }
 
 function getBoxPlots(data) {
@@ -84,7 +122,7 @@ function createReportContainer() {
 
   document.body.appendChild(reportContainer);
 
-  return reportContainer;
+  return plotsContainer;
 }
 
 export default ReportUI;

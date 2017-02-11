@@ -8,6 +8,10 @@ module.exports = {
   "settings": {
     "import/ignore": [".*jaco.*"]
   },
+  "globals": {
+    "window": true,
+    "document": true,
+  },
   "rules": {
     "no-use-before-define": "off",
     'max-len': ['error', 120, 2, {
