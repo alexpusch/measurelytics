@@ -21,7 +21,7 @@ class ReportUI {
   }
 }
 
-function getPlotsForEventHistory([eventName, evnetsHistory]) {
+function getPlotsForEventHistory([eventName, eventsHistory]) {
   const eventsContainer = document.createElement('div');
   eventsContainer.className = 'measurelytics-report-event';
 
@@ -30,12 +30,15 @@ function getPlotsForEventHistory([eventName, evnetsHistory]) {
   titleEl.className = 'measurelytics-report-event__title';
   eventsContainer.appendChild(titleEl);
 
-  const histogramEl = getHistograms(evnetsHistory);
+  const histogramEl = getHistograms(eventsHistory);
+  const boxPlotEl = getBoxPlots(eventsHistory);
 
   eventsContainer.appendChild(histogramEl);
+  eventsContainer.appendChild(boxPlotEl);
 
   return eventsContainer;
 }
+
 
 function getHistograms(eventsHistory) {
   const plotEl = createPlotEl();
@@ -50,6 +53,28 @@ function getHistograms(eventsHistory) {
         color: '#000',
       },
       opacity: 0.3 + (index * (0.7 / historyLength)),
+    };
+  })
+
+  Plotly.newPlot(plotEl, plotDefinitions);
+
+  return plotEl;
+}
+
+function getBoxPlots(eventsHistory) {
+  const plotEl = createPlotEl();
+  const historyLength = eventsHistory.length;
+
+  const plotDefinitions = eventsHistory.map(({date, events}, index) => {
+    return {
+      x: events,
+      type: 'box',
+      name: date,
+      marker: {
+        color: '#000',
+      },
+      opacity: 0.3 + (index * (0.7 / historyLength)),
+      boxpoints: 'all'
     };
   })
 
@@ -79,28 +104,6 @@ function getHistoryByEvent(history) {
 
     return result;
   }, {});
-}
-
-function getBoxPlots(data) {
-  const plotEl = createPlotEl();
-  const colors = randomColors({ count: Object.keys(data).length });
-  const plotDefinitions = Object.keys(data).map((eventName, i) => {
-    const events = data[eventName];
-
-    return {
-      x: events,
-      type: 'box',
-      name: eventName,
-      marker: {
-        color: colors[i],
-        opacity: 0.3,
-      },
-    };
-  });
-
-  Plotly.newPlot(plotEl, plotDefinitions);
-
-  return plotEl;
 }
 
 function createPlotEl() {

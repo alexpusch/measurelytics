@@ -8,7 +8,7 @@
 //   }
 // ]
 
-const HISTORY_LENGTH = 3;
+const HISTORY_LENGTH = 6;
 
 class History {
   static store(data) {

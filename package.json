@@ -1,7 +1,7 @@
 {
   "name": "measurelytics",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/app.bundle.js",
   "author": "Alex Puschinksy <alexpoo@gmail.com>",
   "license": "MIT",
   "scripts": {
