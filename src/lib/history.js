@@ -39,8 +39,6 @@ class History {
       return JSON.parse(serializedHistory);
     }
   }
-
-
 }
 
 export default History;
