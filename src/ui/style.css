@@ -12,11 +12,21 @@
   flex-direction: column;
 }
 
+.measurelytics-report__close-button {
+  content: 'X';
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  padding: 5px;
+}
+
 .measurelytics-report__plots {
   height: 100%;
   overflow: scroll;
   padding: 20px;
   background: white;
+  position: relative;
 }
 
 .measurelytics-report-event__title {

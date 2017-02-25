@@ -30,8 +30,19 @@ class ReportUI {
       .map(eventName => [eventName, historyByEvent[eventName]])
       .map(getPlotsForEventType);
 
-    const plotsContainer = createReportContainer();
+    const reportContainer = getReportContainer();
+    const plotsContainer = getPlotsContainer();
+    reportContainer.appendChild(plotsContainer);
+
+    const closeButton = getCloseButton(function() {
+      reportContainer.parentElement.removeChild(reportContainer);
+    });
+
+    plotsContainer.appendChild(closeButton);
+
     plots.forEach((plot) => plotsContainer.appendChild(plot));
+
+    document.body.appendChild(reportContainer);
   }
 }
 
@@ -87,18 +98,27 @@ function getMenu(onPlotChange) {
   return menuEl;
 }
 
-function createReportContainer() {
-  const reportContainer = document.createElement('div');
-  reportContainer.className = 'measurelytics-report';
+function getReportContainer() {
+  const reportContainerEl = document.createElement('div');
+  reportContainerEl.classList.add('measurelytics-report');
 
-  const plotsContainer = document.createElement('div');
-  plotsContainer.className = 'measurelytics-report__plots';
+  return reportContainerEl;
+}
 
-  reportContainer.appendChild(plotsContainer);
+function getPlotsContainer() {
+  const plotsContainerEl = document.createElement('div');
+  plotsContainerEl.classList.add('measurelytics-report__plots');
 
-  document.body.appendChild(reportContainer);
+  return plotsContainerEl;
+}
 
-  return plotsContainer;
+function getCloseButton(onClose) {
+  const closeButtonEl = document.createElement('div');
+  closeButtonEl.innerText = '×';
+  closeButtonEl.classList.add('measurelytics-report__close-button');
+  closeButtonEl.addEventListener('click', onClose);
+
+  return closeButtonEl;
 }
 
 export default ReportUI;
