@@ -22,6 +22,10 @@ class Measurelytics {
     const historyByEvent = pivotHistoryByEvent(History.get());
     ReportUI.show(historyByEvent);
   }
+
+  static clearHistory() {
+    History.clear();
+  }
 }
 
 export default Measurelytics;

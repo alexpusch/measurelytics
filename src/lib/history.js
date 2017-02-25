@@ -9,10 +9,10 @@
 // ]
 
 const HISTORY_LENGTH = 6;
+const LOCAL_STORAGE_KEY = 'measurelytics-history';
 
 class History {
   static store(data) {
-    console.log('data', data)
     let history = this.get();
 
     const entry = {
@@ -27,17 +27,21 @@ class History {
     }
 
     const serializedHistory = JSON.stringify(history);
-    window.localStorage.setItem('measurelytics-history', serializedHistory);
+    window.localStorage.setItem(LOCAL_STORAGE_KEY, serializedHistory);
   }
 
   static get() {
-    const serializedHistory = window.localStorage.getItem('measurelytics-history');
+    const serializedHistory = window.localStorage.getItem(LOCAL_STORAGE_KEY);
 
     if (!serializedHistory) {
       return [];
     } else {
       return JSON.parse(serializedHistory);
     }
+  }
+
+  static clear() {
+    window.localStorage.removeItem(LOCAL_STORAGE_KEY);
   }
 }
 
