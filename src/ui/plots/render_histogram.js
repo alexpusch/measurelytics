@@ -12,15 +12,26 @@ function renderHistograms(eventsHistory) {
     return {
       x: events,
       type: 'histogram',
+      histnorm: 'probability',
       name: date,
       marker: {
-        color: '#000',
+        color: '#3f51b5',
       },
-      opacity: 0.3 + (index * (0.7 / historyLength)),
+      nbinx: 100,
+      opacity: 0.15 + (index * (0.85 / historyLength)),
     };
   })
 
-  Plotly.newPlot(plotEl, plotDefinitions);
+  const layout = {
+    bargap: 0.05,
+    bargroupgap: 0.2,
+    // barmode: "overlay",
+    title: "Sampled Results",
+    xaxis: {title: "Event duration (ms)"},
+    yaxis: {title: "% of events"}
+  };
+
+  Plotly.newPlot(plotEl, plotDefinitions, layout);
 
   return plotEl;
 }

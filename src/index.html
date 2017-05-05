@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <script src="/assets/app.bundle.js"></script>
+  <style type="text/css">
+    .a{
+      width: 50px;
+      height: 50px;
+      background: red;
+      position: relative;
+    }
+
+    .b{
+      width: 50px;
+      height: 50px;
+      background: blue;
+      position: relative;
+    }
+  </style>
+
+</head>
+<body>
+  <div class='a'></div>
+  <div class='b'></div>
+
+  <script type="text/javascript">
+    var a = document.querySelector('.a')
+    var b = document.querySelector('.b')
+
+    var time = 0
+    var prevTimestmap = new Date()
+
+    var m = Measurelytics.default
+
+    loop = function() {
+      m.start('frame')
+
+      var now = new Date()
+      time += now - prevTimestmap
+      prevTimestmap = now
+
+      m.start('renderA')
+      var rectA = a.getBoundingClientRect()
+      var aPos = rectA.left
+
+      aPos = time * 0.01
+      a.style.left = aPos + "px";
+      m.end('renderA')
+
+      m.start('renderB')
+      var rectB = b.getBoundingClientRect()
+
+      var bBlue = (time * 0.1) % 255
+      b.style.background = `rgb(255, ${bBlue}, 0)`
+
+      m.end('renderB')
+
+      m.end('frame')
+
+      if(time < 500)
+        requestAnimationFrame(loop)
+      else
+        m.showReport()
+    }
+
+    loop()
+  </script>
+
+</body>
+</html>
